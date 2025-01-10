@@ -1,10 +1,7 @@
-import { unstable_cacheLife } from "next/cache";
 import { Suspense } from "react";
 type Props = {params: Promise<{param: string}>}
 // Create a component that includes the delay
 async function DelayedContent({ params }: Props) {
-  "use cache"
-  unstable_cacheLife('seconds')
   const {param} = await params;
   // Simulate 3s delay as if getting from a database
   await new Promise(resolve => setTimeout(resolve, 3000));
