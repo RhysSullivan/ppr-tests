@@ -1,3 +1,5 @@
+"use cache"
+import { cacheLife } from 'next/dist/server/use-cache/cache-life';
 import { Suspense } from 'react';
 
 type Props = {params: Promise<{param: string}>}
@@ -15,6 +17,7 @@ async function AsyncContent({ params }: Props) {
 
 // Main component with Suspense
 export default function AsyncNoWait({ params }: Props) {
+  cacheLife('minutes')
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <AsyncContent params={params} />

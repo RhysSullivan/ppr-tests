@@ -8,10 +8,12 @@ export default function Home() {
 
   useEffect(() => {
     const fetchEndpoints = async () => {
-      const randomNum = Math.floor(Math.random() * 100);
+      const urlParams = new URLSearchParams(window.location.search);
+      const num = urlParams.get('num') || Math.floor(Math.random() * 100);
+      
       const endpoints = [
-        `/async-3s-wait/${randomNum}`, 
-        `/async-no-wait/${randomNum}`, 
+        `/async-3s-wait/${num}`, 
+        `/async-no-wait/${num}`, 
         `/no-async`
       ];
 
@@ -23,24 +25,27 @@ export default function Home() {
                 'Accept': 'text/html',
                 'Connection': 'keep-alive'
               },
-              // Enable streaming
               cache: 'no-store'
             });
 
-            if (!response.body) {
-              throw new Error('No response body');
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const reader = response.body.getReader();
+            const reader = response.body?.getReader();
+            if (!reader) {
+              throw new Error('Failed to get response reader');
+            }
+
             let html = '';
+            const decoder = new TextDecoder();
 
             while (true) {
               const { done, value } = await reader.read();
               if (done) break;
-              
-              // Convert the Uint8Array to text
-              html += new TextDecoder().decode(value);
+              html += decoder.decode(value, { stream: true });
             }
+            html += decoder.decode();
             
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
