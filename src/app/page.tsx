@@ -8,10 +8,11 @@ export default function Home() {
 
   useEffect(() => {
     const fetchEndpoints = async () => {
-      const randomNum = Math.floor(Math.random() * 100);
+      const urlParams = new URLSearchParams(window.location.search);
+      const num = urlParams.get('num') || Math.floor(Math.random() * 100);
       const endpoints = [
-        `/async-3s-wait/${randomNum}`, 
-        `/async-no-wait/${randomNum}`, 
+        `/async-3s-wait/${num}`, 
+        `/async-no-wait/${num}`, 
         `/no-async`
       ];
 
