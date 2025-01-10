@@ -1,12 +1,10 @@
-import { cacheLife } from 'next/dist/server/use-cache/cache-life';
-import { Suspense } from 'react';
-
+import { unstable_cacheLife } from "next/cache";
+import { Suspense } from "react";
 type Props = {params: Promise<{param: string}>}
-
-// Create a separate async component to handle the param
-async function AsyncContent({ params }: Props) {
+// Create a component that includes the delay
+async function DelayedContent({ params }: Props) {
   "use cache"
-  cacheLife('minutes')
+  unstable_cacheLife('seconds')
   const {param} = await params;
   return (
     <div>
@@ -16,11 +14,10 @@ async function AsyncContent({ params }: Props) {
   );
 }
 
-// Main component with Suspense
 export default function AsyncNoWait({ params }: Props) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <AsyncContent params={params} />
+      <DelayedContent params={params} />
     </Suspense>
   );
 }
