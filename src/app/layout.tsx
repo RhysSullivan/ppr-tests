@@ -3,7 +3,6 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Default Metadata",
-  description: "Default Description",
 };
 
 export default function RootLayout({
